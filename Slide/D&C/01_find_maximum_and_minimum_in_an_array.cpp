@@ -1,28 +1,36 @@
-#include <iostream>
+#include<iostream>
+#include<vector>
 using namespace std;
 
-pair<int,int> findMaxMin(int a[], int low, int high){
-    if(low == high)
-        return {a[low], a[low]};
+pair<int,int> findMinMax(int arr[],int l,int h){
+    if(l==h){
+        return {arr[l],arr[l]};
+    }
+    if(h==l+1){
+        if(arr[l]>arr[h]){
+            return {arr[l],arr[h]};
+        }else{
+            return {arr[h],arr[l]};
+        }
+    }
+    int mid=(l+h)/2;
+    auto left=findMinMax(arr,l,mid);
+    auto right=findMinMax(arr,mid+1,h);
 
-    if(high == low + 1){
-        if(a[low] > a[high])
-            return {a[low], a[high]};
-        else
-            return {a[high], a[low]};
+    return {
+        max(left.first,right.first),
+        min(left.second,right.second)
+    };
+}
+int main(){
+    int n;
+    cin>>n;
+    vector<int>arr(n);
+    for(auto & val: arr){
+        cin>>val;
     }
 
-    int mid = (low + high) / 2;
-    auto left = findMaxMin(a, low, mid);
-    auto right = findMaxMin(a, mid + 1, high);
+    auto res=findMinMax(arr.data(),0,n-1);
+    cout<< "Max: "<<res.first<<"\nMin: "<<res.second;
 
-    return {max(left.first, right.first),
-            min(left.second, right.second)};
-}
-
-int main(){
-    int a[] = {3, 5, 1, 9, 2};
-    int n = 5;
-    auto res = findMaxMin(a, 0, n - 1);
-    cout << "Max: " << res.first << "\nMin: " << res.second;
 }
